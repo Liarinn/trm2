@@ -47,22 +47,63 @@
   <a-entity camera></a-entity>
 
   <!-- 1 — ITALY -->
-  <a-nft id="marker1" type="nft" url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/italy/marker" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-    <a-gltf-model id="model1" src="models/colosseum.glb" scale="0.6 0.6 0.6" position="0 0 0" visible="false"></a-gltf-model>
+  <a-nft
+    id="marker1"
+    type="nft"
+    url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/italy/marker"
+    smooth="true"
+    smoothCount="10"
+    smoothTolerance="0.01"
+    smoothThreshold="5"
+  >
+    <a-gltf-model
+      id="model1"
+      src="models/colosseum.glb"
+      scale="40 40 40"
+      position="0 0 -20"
+      visible="false"
+    ></a-gltf-model>
   </a-nft>
 
   <!-- 2 — JAPAN -->
-  <a-nft id="marker2" type="nft" url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/japan/marker" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-    <!-- centered now, smaller scale -->
-    <a-gltf-model id="model2" src="models/torii.glb" scale="0.5 0.5 0.5" position="0 0 0.05" rotation="-90 0 0" visible="false"></a-gltf-model>
+  <a-nft
+    id="marker2"
+    type="nft"
+    url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/japan/marker"
+    smooth="true"
+    smoothCount="10"
+    smoothTolerance="0.01"
+    smoothThreshold="5"
+  >
+    <a-gltf-model
+      id="model2"
+      src="models/torii.glb"
+      scale="30 30 30"
+      position="50 0 0"
+      rotation="-90 0 0"
+      visible="false"
+    ></a-gltf-model>
   </a-nft>
 
   <!-- 3 — ICELAND -->
-  <a-nft id="marker3" type="nft" url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/iceland/marker" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5">
-    <!-- give the box model an id and keep it hidden initially -->
-    <a-box id="model3" color="red" scale="0.4 0.4 0.4" position="0 0 0.05" visible="false"></a-box>
-  </a-nft>
+  <a-nft
+    id="marker3"
+    type="nft"
+    url="https://raw.githubusercontent.com/liarinn/trm2/master/textures/iceland/marker"
+    smooth="true"
+    smoothCount="10"
+    smoothTolerance="0.01"
+    smoothThreshold="5"
 
+  >
+    <a-gltf-model
+      id="model3"
+      src="models/iceberg.glb"
+      scale="50 50 50"
+      position="20 20 0"
+      visible="false"
+    ></a-gltf-model>
+  </a-nft>
 
 </a-scene>
 
@@ -77,15 +118,8 @@ const model1 = document.getElementById("model1");
 const model2 = document.getElementById("model2");
 const model3 = document.getElementById("model3");
 
-const m1 = document.getElementById("marker1");
-const m2 = document.getElementById("marker2");
-const m3 = document.getElementById("marker3");
-
 function showOnly(model) {
-  [model1, model2, model3].forEach(m => {
-    if (!m) return;
-    m.setAttribute("visible", m === model);
-  });
+  [model1, model2, model3].forEach(m => m.setAttribute("visible", m === model));
 }
 
 function showNarrative(text) {
@@ -94,28 +128,17 @@ function showNarrative(text) {
 }
 
 /* ---- ITALY ---- */
-m1.addEventListener("markerFound", () => {
-  console.log("marker1 found");
+document.getElementById("marker1").addEventListener("markerFound", () => {
   if (!seen1) {
     seen1 = true;
     showOnly(model1);
     msg.innerText = "Now scan the Japan marker.";
     showNarrative("<strong>Stop 1 — Rome</strong><br>The Colosseum welcomes you.");
-  } else {
-    // if already scanned, still show it and message
-    showOnly(model1);
-    msg.innerText = "Italy (returning view). Next: Japan.";
   }
-});
-m1.addEventListener("markerLost", () => {
-  console.log("marker1 lost");
-  if (model1) model1.setAttribute("visible", false);
-  msg.innerText = "Italy marker lost.";
 });
 
 /* ---- JAPAN ---- */
-m2.addEventListener("markerFound", () => {
-  console.log("marker2 found");
+document.getElementById("marker2").addEventListener("markerFound", () => {
   if (!seen1) {
     msg.innerText = "You must scan Italy first!";
     return;
@@ -125,20 +148,11 @@ m2.addEventListener("markerFound", () => {
     showOnly(model2);
     msg.innerText = "Now scan the Iceland marker.";
     showNarrative("<strong>Stop 2 — Japan</strong><br>The Torii gate symbolizes passage.");
-  } else {
-    showOnly(model2);
-    msg.innerText = "Japan (returning view). Next: Iceland.";
   }
-});
-m2.addEventListener("markerLost", () => {
-  console.log("marker2 lost");
-  if (model2) model2.setAttribute("visible", false);
-  msg.innerText = "Japan marker lost.";
 });
 
 /* ---- ICELAND ---- */
-m3.addEventListener("markerFound", () => {
-  console.log("marker3 found");
+document.getElementById("marker3").addEventListener("markerFound", () => {
   if (!seen1 || !seen2) {
     msg.innerText = "Follow the route: Italy → Japan → Iceland.";
     return;
@@ -146,11 +160,6 @@ m3.addEventListener("markerFound", () => {
   showOnly(model3);
   msg.innerText = "Excursion complete! 🎉";
   showNarrative("<strong>Stop 3 — Iceland</strong><br>You stand among giant icebergs.");
-});
-m3.addEventListener("markerLost", () => {
-  console.log("marker3 lost");
-  if (model3) model3.setAttribute("visible", false);
-  msg.innerText = "Iceland marker lost.";
 });
 </script>
 
