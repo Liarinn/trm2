@@ -7,8 +7,9 @@
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <!-- AR.js (NFT image tracking) -->
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+
+  <!-- AR.js NFT tracking -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
     body { margin: 0; overflow: hidden; }
@@ -17,23 +18,17 @@
       background: rgba(0,0,0,0.55); padding: 10px 16px;
       color: white; border-radius: 6px; font-family: sans-serif;
     }
-
-    /* NEW: Narrative popup panel */
     #narrative {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
+      position: fixed; bottom: 20px; left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.75);
-      color: white;
-      padding: 16px 22px;
+      color: white; padding: 16px 22px;
       border-radius: 10px;
       max-width: 80%;
       font-family: sans-serif;
       font-size: 15px;
       display: none;
     }
-
     #narrative.show { display: block; }
     #narrative strong { color: #00d0ff; }
   </style>
@@ -42,122 +37,103 @@
 <body>
 
 <div id="msg">Scan the Italy marker first.</div>
-
-<!-- NEW UI narrative panel -->
 <div id="narrative">Welcome!</div>
 
-<a-scene 
-    embedded
-    renderer="colorManagement: true"
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+<a-scene
+  embedded
+  renderer="colorManagement: true"
+  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled:false;"
 >
-
   <a-entity camera></a-entity>
 
-  <!-- 1) ITALY MARKER -->
+  <!-- 1 — ITALY -->
   <a-nft
     id="marker1"
     type="nft"
-    url="textures/italy/marker"
+    url="https://raw.githubusercontent.com/liarinn/trm2/main/textures/italy/marker"
     smooth="true"
     smoothCount="10"
     smoothTolerance="0.01"
     smoothThreshold="5"
   >
-    <a-gltf-model 
+    <a-gltf-model
       id="model1"
       src="models/colosseum.glb"
-      rotation="0 0 0"
       scale="0.5 0.5 0.5"
-      visible="false">
-    </a-gltf-model>
+      visible="false"
+    ></a-gltf-model>
   </a-nft>
 
-  <!-- 2) JAPAN MARKER -->
+  <!-- 2 — JAPAN -->
   <a-nft
     id="marker2"
     type="nft"
-    url="textures/japan/marker"
+    url="https://raw.githubusercontent.com/liarinn/trm2/main/textures/japan/marker"
     smooth="true"
     smoothCount="10"
     smoothTolerance="0.01"
     smoothThreshold="5"
   >
-    <a-gltf-model 
+    <a-gltf-model
       id="model2"
       src="models/torii.glb"
-      rotation="0 0 0"
       scale="0.5 0.5 0.5"
-      visible="false">
-    </a-gltf-model>
+      visible="false"
+    ></a-gltf-model>
   </a-nft>
 
-  <!-- 3) ICELAND MARKER (ICEBERGS NOW) -->
+  <!-- 3 — ICELAND -->
   <a-nft
     id="marker3"
     type="nft"
-    url="textures/iceland/marker"
+    url="https://raw.githubusercontent.com/liarinn/trm2/main/textures/iceland/marker"
     smooth="true"
     smoothCount="10"
     smoothTolerance="0.01"
     smoothThreshold="5"
   >
-    <a-gltf-model 
+    <a-gltf-model
       id="model3"
       src="models/iceberg.glb"
-      rotation="0 0 0"
       scale="0.5 0.5 0.5"
-      visible="false">
-    </a-gltf-model>
+      visible="false"
+    ></a-gltf-model>
   </a-nft>
 
 </a-scene>
 
 <script>
-// ---- ORDER CONTROL FLAGS ----
 let seen1 = false;
 let seen2 = false;
 
-// ---- ELEMENTS ----
 const msg = document.getElementById("msg");
 const narrative = document.getElementById("narrative");
-
-const m1 = document.getElementById("marker1");
-const m2 = document.getElementById("marker2");
-const m3 = document.getElementById("marker3");
 
 const model1 = document.getElementById("model1");
 const model2 = document.getElementById("model2");
 const model3 = document.getElementById("model3");
 
-// Helper that hides all models except the one we want to show
-function showOnly(modelToShow) {
-  [model1, model2, model3].forEach(m => m.setAttribute('visible', m === modelToShow));
+function showOnly(model) {
+  [model1, model2, model3].forEach(m => m.setAttribute("visible", m === model));
 }
 
-// Helper to show narrative text
 function showNarrative(text) {
   narrative.innerHTML = text;
-  narrative.classList.add('show');
+  narrative.classList.add("show");
 }
 
-// ---- MARKER 1 (ITALY) ----
-m1.addEventListener("markerFound", () => {
+/* ---- ITALY ---- */
+document.getElementById("marker1").addEventListener("markerFound", () => {
   if (!seen1) {
     seen1 = true;
     showOnly(model1);
     msg.innerText = "Now scan the Japan marker.";
-
-    showNarrative("<strong>Stop 1 — Rome</strong><br>Colosseum, built AD 80. Tap to continue.");
+    showNarrative("<strong>Stop 1 — Rome</strong><br>The Colosseum welcomes you.");
   }
 });
 
-m1.addEventListener("markerLost", () => {
-  model1.setAttribute('visible', false);
-});
-
-// ---- MARKER 2 (JAPAN) ----
-m2.addEventListener("markerFound", () => {
+/* ---- JAPAN ---- */
+document.getElementById("marker2").addEventListener("markerFound", () => {
   if (!seen1) {
     msg.innerText = "You must scan Italy first!";
     return;
@@ -166,30 +142,19 @@ m2.addEventListener("markerFound", () => {
     seen2 = true;
     showOnly(model2);
     msg.innerText = "Now scan the Iceland marker.";
-
-    showNarrative("<strong>Stop 2 — Japan</strong><br>The Torii gate. You feel the calm.");
+    showNarrative("<strong>Stop 2 — Japan</strong><br>The Torii gate symbolizes passage.");
   }
 });
 
-m2.addEventListener("markerLost", () => {
-  model2.setAttribute('visible', false);
-});
-
-// ---- MARKER 3 (ICELAND — ICEBERGS) ----
-m3.addEventListener("markerFound", () => {
+/* ---- ICELAND ---- */
+document.getElementById("marker3").addEventListener("markerFound", () => {
   if (!seen1 || !seen2) {
     msg.innerText = "Follow the route: Italy → Japan → Iceland.";
     return;
   }
-
   showOnly(model3);
   msg.innerText = "Excursion complete! 🎉";
-
-  showNarrative("<strong>Stop 3 — Iceland</strong><br>Silent icebergs. Congratulations — you completed the excursion.");
-});
-
-m3.addEventListener("markerLost", () => {
-  model3.setAttribute('visible', false);
+  showNarrative("<strong>Stop 3 — Iceland</strong><br>You stand among giant icebergs.");
 });
 </script>
 
